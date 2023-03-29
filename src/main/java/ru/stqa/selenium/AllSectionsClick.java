@@ -34,14 +34,16 @@ public class AllSectionsClick {
         driver.findElement(By.name("password")).sendKeys("admin");
         driver.findElement(By.name("login")).click();
 
-        List<String> menuList = driver.findElements(By.cssSelector("div#box-apps-menu-wrapper > ul.list-vertical li")).stream().map(e -> e.getText()).collect(Collectors.toList());
-        for (String item : menuList) {
-            driver.findElement(By.xpath("//span[text()='" + item + "']")).click();
+        List<WebElement> menuList = driver.findElements(By.cssSelector("#app-"));
+        for (int i = 0; i < menuList.size(); i++) {
+            menuList = driver.findElements(By.cssSelector("#app-"));
+            menuList.get(i).click();
             assertTrue (driver.findElement(By.cssSelector("h1")).isDisplayed());
 
-            List<String> subMenuList = driver.findElements(By.cssSelector("li#app-.selected ul.docs li")).stream().map(e -> e.getText()).collect(Collectors.toList());
-            for (String subItemName : subMenuList) {
-                driver.findElement(By.xpath("//span[text()='" + subItemName + "']")).click();
+            List<WebElement> subMenuList = driver.findElements(By.cssSelector("#app- ul li a"));
+            for (int j = 0; j < subMenuList.size(); j++) {
+                subMenuList = driver.findElements(By.cssSelector("#app- ul li a"));
+                subMenuList.get(j).click();
                 assertTrue (driver.findElement(By.cssSelector("h1")).isDisplayed());
             }
         }
