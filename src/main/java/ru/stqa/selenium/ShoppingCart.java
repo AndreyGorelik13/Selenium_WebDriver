@@ -26,7 +26,7 @@ public class ShoppingCart {
     }
 
     @Test
-    public void shoppingCartTest() {
+    public void shoppingCartTest(){
 
         driver.get("http://localhost/litecart/en/");
 
@@ -44,19 +44,13 @@ public class ShoppingCart {
 
         driver.findElement(By.cssSelector("div#box-checkout-cart ul.shortcuts  li.shortcut:nth-child(1)")).click();
         List<String> productCountsList = driver.findElements(By.cssSelector(("div#box-checkout-cart ul li.item input[name=quantity]"))).stream().map(p -> p.getAttribute("value")).collect(Collectors.toList());
-        int totalProductsCount = 0;
-        for (int j = 0; j < productCountsList.size(); j++)
-            totalProductsCount = totalProductsCount + Integer.parseInt(productCountsList.get(j));
-
-        while (totalProductsCount > 0) {
-            int productCount = Integer.parseInt(driver.findElement(By.cssSelector("div.viewport input[name=quantity]")).getAttribute("value"));
-            totalProductsCount = totalProductsCount - productCount;
+        int totalProductsCount = productCountsList.size();
+        for (int j = totalProductsCount; j > 1; j--){
             wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.viewport button[name='remove_cart_item']"))).click();
-            if (driver.findElements(By.cssSelector("div#checkout-summary-wrapper")).size() == 1) {
                 driver.findElement(By.cssSelector("div.viewport button[name='update_cart_item']")).click();
                 wait.until(ExpectedConditions.attributeContains(By.cssSelector("div#checkout-cart-wrapper"), "style", "opacity: 1;"));
-            }
         }
+        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.viewport button[name='remove_cart_item']"))).click();
         wait.until(ExpectedConditions.textToBe(By.cssSelector("div#checkout-cart-wrapper"),
                 "There are no items in your cart.\n" +
                         "<< Back"));
