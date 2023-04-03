@@ -9,8 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +41,7 @@ public class CheckSortCountriesAndGeo {
             String zoneCount = countryLink.findElement(By.xpath("./../../td[6]")).getText();
             if (!zoneCount.equals("0")) {
                 countryLink.click();
-                List<String> zonesList = driver.findElements(By.xpath("//h2[text()='Zones']/table/tbody/tr/td[3]")).stream().map(e -> e.getText()).collect(Collectors.toList());
+                List<String> zonesList = driver.findElements(By.xpath("//h2[text()='Zones']/following::table/tbody/tr/td[3]/input[@type='hidden']/..")).stream().map(e -> e.getText()).collect(Collectors.toList());
                 checkSortList(zonesList);
                 driver.navigate().back();
             }
@@ -66,7 +66,11 @@ public class CheckSortCountriesAndGeo {
     }
 
     private void checkSortList(List<String> actualList) {
-        List<String> sortedList = actualList;
+        List<String> sortedList = new ArrayList<>();
+        for(int i=0; i < actualList.size(); i++){
+            sortedList.add("");
+        }
+        Collections.copy(sortedList, actualList);
         Collections.sort(sortedList);
         Assert.assertEquals(actualList, sortedList);
     }
