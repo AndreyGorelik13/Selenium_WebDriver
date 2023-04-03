@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.time.Duration;
+import java.util.Random;
 
 public class AddNewProduct {
 
@@ -26,6 +27,8 @@ public class AddNewProduct {
 
     @Test
     public void addNewProductTest() {
+        String productName = "Rubber duck" + new Random().nextInt(500);
+
         driver.get("http://localhost/litecart/admin/");
         driver.findElement(By.name("username")).sendKeys("admin");
         driver.findElement(By.name("password")).sendKeys("admin");
@@ -35,7 +38,7 @@ public class AddNewProduct {
         driver.findElement(By.xpath("//a[contains(text(),'Add New Product')]")).click();
 
         driver.findElement(By.xpath("//label[contains(text(),'Enabled')]")).click();
-        driver.findElement(By.cssSelector("input[name='name[en]']")).sendKeys("Rubber duck");
+        driver.findElement(By.cssSelector("input[name='name[en]']")).sendKeys(productName);
         driver.findElement(By.cssSelector("input[name=code")).sendKeys("RD13");
         driver.findElement(By.cssSelector("input[name=quantity")).sendKeys("13");
         driver.findElement(By.cssSelector("input[name='new_images[]']")).sendKeys(new File("src/main/resources/Duck.jpg").getAbsolutePath());
@@ -54,7 +57,7 @@ public class AddNewProduct {
         driver.findElement(By.cssSelector("button[name=save]")).click();
 
         driver.findElement(By.xpath("//span[text()='Catalog']")).click();
-        Assert.assertTrue("The product is not in the catalog", driver.findElement(By.xpath("//form[@name='catalog_form']/descendant::table[@class='dataTable']/tbody/descendant::tr/td[3]/a[text()='Rubber duck']")).isDisplayed());
+        Assert.assertTrue("The product is not in the catalog", driver.findElement(By.xpath("//form[@name='catalog_form']/descendant::table[@class='dataTable']/tbody/descendant::tr/td[3]/a[text()='" + productName + "']")).isDisplayed());
     }
 
     @After
