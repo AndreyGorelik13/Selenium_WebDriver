@@ -11,8 +11,6 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ShoppingCart {
 
@@ -26,7 +24,7 @@ public class ShoppingCart {
     }
 
     @Test
-    public void shoppingCartTest(){
+    public void shoppingCartTest() {
 
         driver.get("http://localhost/litecart/en/");
 
@@ -43,14 +41,10 @@ public class ShoppingCart {
         driver.findElement(By.xpath("//a[text()='Checkout »']")).click();
 
         driver.findElement(By.cssSelector("div#box-checkout-cart ul.shortcuts  li.shortcut:nth-child(1)")).click();
-        List<String> productCountsList = driver.findElements(By.cssSelector(("div#box-checkout-cart ul li.item input[name=quantity]"))).stream().map(p -> p.getAttribute("value")).collect(Collectors.toList());
-        int totalProductsCount = productCountsList.size();
-        for (int j = totalProductsCount; j > 1; j--){
+        while (driver.findElements(By.cssSelector(("div#box-checkout-cart ul li.item "))).size() != 0) {
             wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.viewport button[name='remove_cart_item']"))).click();
-                driver.findElement(By.cssSelector("div.viewport button[name='update_cart_item']")).click();
-                wait.until(ExpectedConditions.attributeContains(By.cssSelector("div#checkout-cart-wrapper"), "style", "opacity: 1;"));
+            wait.until(ExpectedConditions.attributeContains(By.cssSelector("div#checkout-cart-wrapper"), "style", "opacity: 1;"));
         }
-        wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.viewport button[name='remove_cart_item']"))).click();
         wait.until(ExpectedConditions.textToBe(By.cssSelector("div#checkout-cart-wrapper"),
                 "There are no items in your cart.\n" +
                         "<< Back"));
